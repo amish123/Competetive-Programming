@@ -1,0 +1,117 @@
+#include <bits/stdc++.h>
+using namespace std;
+enum Color {WHITE, GRAY, BLACK};
+ 
+// Graph class represents a directed graph using
+// adjacency list representation
+class Graph
+{   int c;
+    int V; // No. of vertices
+    list<int>* adj; // adjacency lists
+ 
+    // DFS traversal of the vertices reachable from v
+    void DFSUtil(int v, int color[]);
+public:
+    Graph(int V);  // Constructor
+ 
+    // function to add an edge to graph
+    void addEdge(int v, int w);
+ 
+    int isCyclic();
+};
+ 
+// Constructor
+Graph::Graph(int V)
+{
+    this->V = V;
+    this->c = 0;
+    adj = new list<int>[V];
+}
+ 
+// Utility function to add an edge
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w); // Add w to v's list.
+}
+ 
+// Recursive function to find if there is back edge
+// in DFS subtree tree rooted with 'u'
+void Graph::DFSUtil(int u, int color[])
+{
+    // GRAY :  This vertex is being processed (DFS
+    //         for this vertex has started, but not
+    //         ended (or this vertex is in function
+    //         call stack)
+    color[u] = GRAY;
+ 
+    // Iterate through all adjacent vertices
+    list<int>::iterator i;
+    for (i = adj[u].begin(); i != adj[u].end(); ++i)
+    {
+        int v = *i;  // An adjacent of u
+ 
+        // If there is
+        if (color[v] == GRAY)
+          ++c;
+          //return true;
+ 
+        // If v is not processed and there is a back
+        // edge in subtree rooted with v
+        if (color[v] == WHITE) 
+        DFSUtil(v, color);
+          //return true;
+    }
+ 
+    // Mark this vertex as processed
+    color[u] = BLACK;
+ 
+    //return false;
+}
+ 
+// Returns true if there is a cycle in graph
+int Graph::isCyclic()
+{
+    // Initialize color of all vertices as WHITE
+    int *color = new int[V];
+    int sum=0;
+    for (int i = 0; i < V; i++)
+        color[i] = WHITE;
+ 
+    // Do a DFS traversal beginning with all
+    // vertices
+    for (int i = 0; i < V; i++){
+        if (color[i] == WHITE)
+        {
+            DFSUtil(i, color);
+         sum=sum+c;
+        }
+           //if (DFSUtil(i, color) == true)
+             
+         else
+         c=0;
+        }
+     return sum;                
+ 
+    //return false;
+}
+ 
+// Driver code to test above
+int main()
+{
+    // Create a graph given in the above diagram
+    Graph g(5);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+    g.addEdge(3, 3);
+     g.addEdge(4, 4);
+    int a=g.isCyclic();
+    //if (a)
+        cout << a;
+    //else
+      //  cout << a;
+ 
+    return 0;
+}
