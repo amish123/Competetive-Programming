@@ -1,0 +1,51 @@
+/*
+class Node {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int d) {
+            data = d;
+            left = NULL;
+            right = NULL;
+        }
+};
+
+*/
+map<int, pair<int,int>> m;
+    void topView(Node * root) {
+        //int *a=0;
+        //int *b=0;
+        
+       func(root,0,0);
+   for(auto i=m.begin();i!=m.end();i++)
+   { 
+       pair<int, int> p = i->second;
+       cout<<p.first<<" ";
+   }
+    }
+void func(Node *root,int hd,int l)
+{int flag=0;
+    if(root!=NULL)
+    {
+        if(m.find(hd)==m.end())
+        {//flag=1;
+         m[hd]=make_pair(root->data,l);
+        }
+        else
+        {
+            pair<int, int> p = (m.find(hd))->second;
+            if(p.second>l){
+                m.erase(hd);
+                m[hd]=make_pair(root->data,l);
+                }
+        }
+        func(root->left,hd-1,l+1);
+       /* if(flag==1)
+        {
+            cout<<root->data<<" ";
+            //m[hd]=root->data;
+        }*/
+        func(root->right,hd+1,l+1);
+    }
+}
